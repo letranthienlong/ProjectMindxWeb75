@@ -11,7 +11,7 @@ import ButtonInputSearch from '../ButtonInputSearch/ButtonInputSearch';
 const HeaderComponent = () => {
   return (
     <div>
-      <WrapperHeader gutter={16}>
+      <WrapperHeader>
         <Col span={6}>
           <WrapperTextHeader>
             E-COMMERCE
@@ -23,8 +23,6 @@ const HeaderComponent = () => {
             textButton='Tìm kiếm'
             placeholder="input search text"
             variant='borderless'
-            backgroundColorInput='white'
-            colorButton='blue'
           />
         </Col>
         <Col span={6} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
