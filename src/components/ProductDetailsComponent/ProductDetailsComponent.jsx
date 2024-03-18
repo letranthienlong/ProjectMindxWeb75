@@ -63,11 +63,10 @@ const ProductDetailsComponent = () => {
                     <ButtonComponent
                         size={40}
                         styleButton={{
-                            background: 'rgb(255,57,59)',
+                            background: 'rgb(255,57,69)',
                             borderRadius: '4px',
                             height: '48px',
                             width: '220px',
-                            border: 'none',
                         }}
                         textButton={'Chọn mua'}
                         styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}>
