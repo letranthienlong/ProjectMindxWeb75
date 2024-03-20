@@ -1,12 +1,12 @@
-import React from 'react'
 import { Badge, Col } from 'antd'
-import { WrapperHeader, WrapperTextHeader, WrapperHeaderAccount, WrapperTextHeaderSmall } from './style'
+import React from 'react'
+import { WrapperHeader, WrapperHeaderAccout, WrapperTextHeader, WrapperTextHeaderSmall } from './style'
 import {
   UserOutlined,
   CaretDownOutlined,
   ShoppingCartOutlined
 } from '@ant-design/icons';
-import ButtonInputSearch from '../ButtonInputSearch/ButtonInputSearch';
+import ButttonInputSearch from '../ButtonInputSearch/ButttonInputSearch';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -17,23 +17,22 @@ const HeaderComponent = () => {
     navigate('/sign-in')
   }
   return (
-    <div style={{ width: '100%', display: 'flex', background: 'rgb(26,148,255)', justifyContent: 'center' }}>
+    <div style={{ width: '100%', background: 'rgb(26, 148, 255)', display: 'flex', justifyContent: 'center' }}>
       <WrapperHeader>
         <Col span={5}>
-          <WrapperTextHeader>
-            E-COMMERCE
-          </WrapperTextHeader>
+          <WrapperTextHeader>Nhóm Long Trường Kiệt</WrapperTextHeader>
         </Col>
         <Col span={13}>
-          <ButtonInputSearch
-            size='large'
-            textButton='Tìm kiếm'
+          <ButttonInputSearch
+            size="large"
+            bordered={false}
+            textButton="Tìm kiếm"
             placeholder="input search text"
-            variant='borderless'
+          // onSearch={onSearch}
           />
         </Col>
         <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
-          <WrapperHeaderAccount>
+          <WrapperHeaderAccout>
             <UserOutlined style={{ fontSize: '30px' }} />
             {user?.name ? (
               <div style={{ cursor: 'pointer' }}>{user.name}</div>
@@ -46,14 +45,12 @@ const HeaderComponent = () => {
                 </div>
               </div>
             )}
-          </WrapperHeaderAccount>
+          </WrapperHeaderAccout>
           <div>
-            <Badge count={4} size='small'>
-              <ShoppingCartOutlined style={{ fontSize: '30px', color: 'white' }} />
+            <Badge count={4} size="small">
+              <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
             </Badge>
-            <WrapperTextHeaderSmall>
-              Giỏ hàng
-            </WrapperTextHeaderSmall>
+            <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
           </div>
         </Col>
       </WrapperHeader>

@@ -1,8 +1,8 @@
-import React from 'react'
-import { WrapperContent, WrapperLabelText, WrapperTextPrice, WrapperTextValue } from './style'
 import { Checkbox, Rate } from 'antd'
+import React from 'react'
+import { WrapperContent, WrapperLableText, WrapperTextPrice, WrapperTextValue } from './style'
 
-const NavbarComponent = () => {
+const NavBarComponent = () => {
     const onChange = () => { }
     const renderContent = (type, options) => {
         switch (type) {
@@ -14,15 +14,10 @@ const NavbarComponent = () => {
                 })
             case 'checkbox':
                 return (
-                    <Checkbox.Group style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '12px'
-                    }} onChange={onChange}>
+                    <Checkbox.Group style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }} onChange={onChange}>
                         {options.map((option) => {
                             return (
-                                <Checkbox style={{ marginLeft: '0px' }} value={option.value}>{option.label}</Checkbox>
+                                <Checkbox style={{ marginLeft: 0 }} value={option.value}>{option.label}</Checkbox>
                             )
                         })}
                     </Checkbox.Group>
@@ -30,35 +25,31 @@ const NavbarComponent = () => {
             case 'star':
                 return options.map((option) => {
                     return (
-                        <div style={{ display: 'flex' }}>
+                        <div style={{ dispaly: 'flex' }}>
                             <Rate style={{ fontSize: '12px' }} disabled defaultValue={option} />
-                            <span>{`từ ${option} sao`}</span>
+                            <span> {`tu ${option}  sao`}</span>
                         </div>
-
                     )
                 })
             case 'price':
                 return options.map((option) => {
                     return (
-                        <WrapperTextPrice>
-                            {option}
-                        </WrapperTextPrice>
+                        <WrapperTextPrice>{option}</WrapperTextPrice>
                     )
                 })
             default:
                 return {}
         }
     }
+
     return (
         <div>
-            <WrapperLabelText>
-                Label
-            </WrapperLabelText>
+            <WrapperLableText>Lable</WrapperLableText>
             <WrapperContent>
-                {renderContent('text', ['Tủ lạnh', 'TV', 'Máy giặt'])}
+                {renderContent('text', ['Tu lanh', 'TV', 'MAYGIAT'])}
             </WrapperContent>
         </div>
     )
 }
 
-export default NavbarComponent
+export default NavBarComponent
