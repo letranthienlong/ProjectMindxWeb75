@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
 import InputForm from '../../components/InputForm/InputForm'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
@@ -9,6 +9,7 @@ import * as UserService from '../../services/UserService'
 import { useNavigate } from 'react-router-dom'
 import Loading from '../../components/LoadingComponent/Loading'
 import { useMutationHooks } from '../../hooks/useMutationHook'
+import * as message from '../../components/MessageComponents/Message'
 
 const SignUpPage = () => {
     const navigate = useNavigate()
@@ -26,7 +27,17 @@ const SignUpPage = () => {
         data => UserService.signupUser(data)
     )
 
-    const { data,isPending, isSuccess } = mutation
+    const { data, isPending, isSuccess, isError } = mutation
+
+    useEffect(() => {
+        if (isSuccess) {
+            message.success()
+            handleNavigateSignIn()
+        } else if (isError) {
+            message.error()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccess, isError])
 
     const handleOnchangePassword = (value) => {
         setPassword(value)
@@ -42,9 +53,6 @@ const SignUpPage = () => {
 
     const handleSignUp = () => {
         mutation.mutate({ email, password, confirmPassword })
-        if (isSuccess) {
-            handleNavigateSignIn()
-        }
     }
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'rgba(0,0,0,0.53)', height: '100vh' }}>
