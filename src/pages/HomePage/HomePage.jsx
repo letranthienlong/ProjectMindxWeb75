@@ -16,9 +16,8 @@ const HomePage = () => {
     console.log('res', res)
     return res
   }
-  const { isPending, data: products } = useQuery(['products'], fetchProductAll, { retry: 3, retryDelay: 1000 })
+  const {isLoading, data: products} = useQuery(['products'], fetchProductAll, { retry: 3, retryDelay: 1000 })
   console.log('data', products)
-
   return (
     <>
       <div style={{ width: '1270px', margin: '0 auto' }}>
@@ -36,12 +35,12 @@ const HomePage = () => {
           <WrapperProducts>
             {products?.data?.map((product) => {
               return (
-                <CardComponent
-                  key={product._id}
-                  countInStock={product.countInStock}
-                  description={product.description}
-                  image={product.image}
-                  name={product.name}
+                <CardComponent 
+                  key={product._id} 
+                  countInStock={product.countInStock} 
+                  description={product.description} 
+                  image={product.image} 
+                  name={product.name} 
                   price={product.price}
                   rating={product.rating}
                   type={product.type}

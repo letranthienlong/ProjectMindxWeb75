@@ -4,7 +4,7 @@ import { StarFilled } from '@ant-design/icons'
 import logo from '../../assets/images/logo.png'
 
 const CardComponent = (props) => {
-    const { countInStock, description, image, name, price, rating, type, discount, selled } = props
+    const {countInStock, description, image, name, price, rating, type, discount, selled} = props
     return (
         <WrapperCardStyle
             hoverable
@@ -15,7 +15,6 @@ const CardComponent = (props) => {
         >
             <img
                 src={logo}
-                alt='Card'
                 style={{
                     width: '68px',
                     height: '14px',
@@ -28,9 +27,9 @@ const CardComponent = (props) => {
             <StyleNameProduct>{name}</StyleNameProduct>
             <WrapperReportText>
                 <span style={{ marginRight: '4px' }}>
-                    <span>{rating}</span> <StarFilled style={{ fontSize: '12px', color: 'rgb(253, 216, 54)' }} />
+                    <span>{rating} </span> <StarFilled style={{ fontSize: '12px', color: 'rgb(253, 216, 54)' }} />
                 </span>
-                <WrapperStyleTextSell> | Da ban {selled || 1000}+</WrapperStyleTextSell>
+                <WrapperStyleTextSell> | Da ban {selled || 1000 }+</WrapperStyleTextSell>
             </WrapperReportText>
             <WrapperPriceText>
                 <span style={{ marginRight: '8px' }}>{price}</span>

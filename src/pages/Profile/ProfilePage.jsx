@@ -10,9 +10,9 @@ import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../components/LoadingComponent/Loading'
 import * as message from '../../components/Message/Message'
 import { updateUser } from '../../redux/slides/userSlide'
+import { Button, Upload } from 'antd'
+import { UploadOutlined} from '@ant-design/icons'
 import { getBase64 } from '../../utils'
-import { Button } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
 
 const ProfilePage = () => {
     const user = useSelector((state) => state.user)
@@ -29,7 +29,7 @@ const ProfilePage = () => {
     )
 
     const dispatch = useDispatch()
-    const { data, isPending, isSuccess, isError } = mutation
+    const { data, isLoading, isSuccess, isError } = mutation
 
     useEffect(() => {
         setEmail(user?.email)
@@ -66,10 +66,10 @@ const ProfilePage = () => {
         setAddress(value)
     }
 
-    const handleOnchangeAvatar = async ({ fileList }) => {
+    const handleOnchangeAvatar = async ({fileList}) => {
         const file = fileList[0]
         if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
+            file.preview = await getBase64(file.originFileObj );
         }
         setAvatar(file.preview)
     }
@@ -81,7 +81,7 @@ const ProfilePage = () => {
     return (
         <div style={{ width: '1270px', margin: '0 auto', height: '500px' }}>
             <WrapperHeader>Thông tin người dùng</WrapperHeader>
-            <Loading isPending={isPending}>
+            <Loading isLoading={isLoading}>
                 <WrapperContentProfile>
                     <WrapperInput>
                         <WrapperLabel htmlFor="name">Name</WrapperLabel>
@@ -142,8 +142,9 @@ const ProfilePage = () => {
                                 width: '60px',
                                 borderRadius: '50%',
                                 objectFit: 'cover'
-                            }} alt="avatar" />
+                            }} alt="avatar"/>
                         )}
+                        {/* <InputForm style={{ width: '300px' }} id="avatar" value={avatar} onChange={handleOnchangeAvatar} /> */}
                         <ButtonComponent
                             onClick={handleUpdate}
                             size={40}

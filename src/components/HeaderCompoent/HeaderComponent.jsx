@@ -1,5 +1,5 @@
-import { Badge, Col, Popover } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Badge, Button, Col, Popover } from 'antd'
+import React from 'react'
 import { WrapperContentPopup, WrapperHeader, WrapperHeaderAccout, WrapperTextHeader, WrapperTextHeaderSmall } from './style'
 import {
   UserOutlined,
@@ -10,8 +10,11 @@ import ButttonInputSearch from '../ButtonInputSearch/ButttonInputSearch';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as UserService from '../../services/UserService'
-import { resetUser } from '../../redux/slides/userSlide';
+import { resetUser } from '../../redux/slides/userSlide'
+import { useState } from 'react';
 import Loading from '../LoadingComponent/Loading';
+import { useEffect } from 'react';
+
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate()
@@ -19,23 +22,23 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const dispatch = useDispatch()
   const [userName, setUserName] = useState('')
   const [userAvatar, setUserAvatar] = useState('')
-  const [pending, setPending] = useState(false)
+  const [loading, setLoading] = useState(false)
   const handleNavigateLogin = () => {
     navigate('/sign-in')
   }
 
   const handleLogout = async () => {
-    setPending(true)
+    setLoading(true)
     await UserService.logoutUser()
     dispatch(resetUser())
-    setPending(false)
+    setLoading(false)
   }
 
   useEffect(() => {
-    setPending(true)
+    setLoading(true)
     setUserName(user?.name)
     setUserAvatar(user?.avatar)
-    setPending(false)
+    setLoading(false)
   }, [user?.name, user?.avatar])
 
   const content = (
@@ -53,7 +56,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     <div style={{ width: '100%', background: 'rgb(26, 148, 255)', display: 'flex', justifyContent: 'center' }}>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>
         <Col span={5}>
-          <WrapperTextHeader>Nhóm Long Trường Kiệt</WrapperTextHeader>
+          <WrapperTextHeader>LAPTRINHTHATDE</WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
           <Col span={13}>
@@ -67,7 +70,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           </Col>
         )}
         <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
-          <Loading isPending={pending}>
+          <Loading isLoading={loading}>
             <WrapperHeaderAccout>
               {userAvatar ? (
                 <img src={userAvatar} alt="avatar" style={{

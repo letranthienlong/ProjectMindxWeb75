@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import * as UserService from '../../services/UserService'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../components/LoadingComponent/Loading'
-import { jwtDecode } from "jwt-decode"
+import jwt_decode from "jwt-decode";
 import { useDispatch } from 'react-redux'
 import { updateUser } from '../../redux/slides/userSlide'
 
@@ -25,14 +25,14 @@ const SignInPage = () => {
   const mutation = useMutationHooks(
     data => UserService.loginUser(data)
   )
-  const { data, isPending, isSuccess } = mutation
+  const { data, isLoading, isSuccess } = mutation
 
   useEffect(() => {
     if (isSuccess) {
       navigate('/')
       localStorage.setItem('access_token', JSON.stringify(data?.access_token))
       if (data?.access_token) {
-        const decoded = jwtDecode(data?.access_token)
+        const decoded = jwt_decode(data?.access_token)
         if (decoded?.id) {
           handleGetDetailsUser(decoded?.id, data?.access_token)
         }
@@ -98,7 +98,7 @@ const SignInPage = () => {
             />
           </div>
           {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
-          <Loading isPending={isPending}>
+          <Loading isLoading={isLoading}>
             <ButtonComponent
               disabled={!email.length || !password.length}
               onClick={handleSignIn}
