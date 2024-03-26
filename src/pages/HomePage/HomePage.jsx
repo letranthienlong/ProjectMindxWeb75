@@ -16,6 +16,7 @@ const HomePage = () => {
     console.log('res', res)
     return res
   }
+  // eslint-disable-next-line no-unused-vars
   const {isLoading, data: products} = useQuery(['products'], fetchProductAll, { retry: 3, retryDelay: 1000 })
   console.log('data', products)
   return (
