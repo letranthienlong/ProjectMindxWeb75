@@ -2,7 +2,7 @@ import React from 'react'
 
 const HeaderLeft = () => {
   return (
-    <div>LAPTRINHTHATDE</div>
+    <div>Long Trường Kiệt</div>
   )
 }
 
