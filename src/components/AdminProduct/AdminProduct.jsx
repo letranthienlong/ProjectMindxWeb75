@@ -94,6 +94,17 @@ const AdminProduct = () => {
         },
     )
 
+    const mutationDeletedMany = useMutationHooks(
+        (data) => {
+            const { token, ...ids
+            } = data
+            const res = ProductService.deleteManyProduct(
+                ids,
+                token)
+            return res
+        },
+    )
+
     const getAllProducts = async () => {
         const res = await ProductService.getAllProduct()
         return res
@@ -120,19 +131,28 @@ const AdminProduct = () => {
     }, [form, stateProductDetails])
 
     useEffect(() => {
-        if (rowSelected) {
+        if (rowSelected && isOpenDrawer) {
             setIsLoadingUpdate(true)
             fetchGetDetailsProduct(rowSelected)
         }
-    }, [rowSelected])
+    }, [rowSelected, isOpenDrawer])
 
     const handleDetailsProduct = () => {
         setIsOpenDrawer(true)
     }
 
+    const handleDelteManyProducts = (ids) => {
+        mutationDeletedMany.mutate({ ids: ids, token: user?.access_token }, {
+            onSettled: () => {
+                queryProduct.refetch()
+            }
+        })
+    }
+
     const { data, isLoading, isSuccess, isError } = mutation
     const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
     const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
+    const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
 
     const queryProduct = useQuery({ queryKey: ['products'], queryFn: getAllProducts })
     const { isLoading: isLoadingProducts, data: products } = queryProduct
@@ -299,8 +319,16 @@ const AdminProduct = () => {
         } else if (isError) {
             message.error()
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccess])
+
+    useEffect(() => {
+        if (isSuccessDelectedMany && dataDeletedMany?.status === 'OK') {
+            message.success()
+        } else if (isErrorDeletedMany) {
+            message.error()
+        }
+    }, [isSuccessDelectedMany])
 
     useEffect(() => {
         if (isSuccessDelected && dataDeleted?.status === 'OK') {
@@ -309,7 +337,7 @@ const AdminProduct = () => {
         } else if (isErrorDeleted) {
             message.error()
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessDelected])
 
     const handleCloseDrawer = () => {
@@ -333,7 +361,7 @@ const AdminProduct = () => {
         } else if (isErrorUpdated) {
             message.error()
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessUpdated])
 
     const handleCancelDelete = () => {
@@ -421,7 +449,7 @@ const AdminProduct = () => {
                 <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button>
             </div>
             <div style={{ marginTop: '20px' }}>
-                <TableComponent columns={columns} isLoading={isLoadingProducts} data={dataTable} onRow={(record, rowIndex) => {
+                <TableComponent handleDelteMany={handleDelteManyProducts} columns={columns} isLoading={isLoadingProducts} data={dataTable} onRow={(record, rowIndex) => {
                     return {
                         onClick: event => {
                             setRowSelected(record._id)
