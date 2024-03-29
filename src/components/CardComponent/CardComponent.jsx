@@ -21,7 +21,6 @@ const CardComponent = (props) => {
         >
             <img
                 src={logo}
-                alt='logo'
                 style={{
                     width: '68px',
                     height: '14px',
@@ -39,7 +38,7 @@ const CardComponent = (props) => {
                 <WrapperStyleTextSell> | Da ban {selled || 1000}+</WrapperStyleTextSell>
             </WrapperReportText>
             <WrapperPriceText>
-                <span style={{ marginRight: '8px' }}>{price.toLocaleString()}</span>
+                <span style={{ marginRight: '8px' }}>{price?.toLocaleString()}</span>
                 <WrapperDiscountText>
                     - {discount || 5} %
                 </WrapperDiscountText>

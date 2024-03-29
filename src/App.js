@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode";
 import * as UserService from "./services/UserService";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "./redux/slides/userSlide";
+import axios from "axios";
 import Loading from "./components/LoadingComponent/Loading";
 
 function App() {
@@ -21,7 +22,6 @@ function App() {
       handleGetDetailsUser(decoded?.id, storageData);
     }
     setIsLoading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDecoded = () => {
