@@ -1,87 +1,114 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import DefaultComponent from './components/DefaultComponent/DefaultComponent'
-import { routes } from './routes'
-import { isJsonString } from './utils'
+import React, { Fragment, useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
+import { routes } from "./routes";
+import { isJsonString } from "./utils";
 import jwt_decode from "jwt-decode";
-import * as UserService from './services/UserService'
-import { useDispatch, useSelector } from 'react-redux'
-import { resetUser, updateUser } from './redux/slides/userSlide'
-import axios from 'axios'
-import Loading from './components/LoadingComponent/Loading'
+import * as UserService from "./services/UserService";
+import { useDispatch, useSelector } from "react-redux";
+import { resetUser, updateUser } from "./redux/slides/userSlide";
+import Loading from "./components/LoadingComponent/Loading";
 
 function App() {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false)
-  const user = useSelector((state) => state.user)
+  const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    setIsLoading(true)
-    const { storageData, decoded } = handleDecoded()
+    setIsLoading(true);
+
+    // Xử lý giải mã dữ liệu từ storage
+    const { storageData, decoded } = handleDecoded();
+
+    // Nếu đã giải mã thành công và có ID người dùng, gọi hàm lấy chi tiết người dùng
     if (decoded?.id) {
-      handleGetDetailsUser(decoded?.id, storageData)
+      handleGetDetailsUser(decoded?.id, storageData);
     }
-    setIsLoading(false)
-  }, [])
 
+    setIsLoading(false);
+  }, []);
+
+  // Hàm giải mã dữ liệu từ storage
   const handleDecoded = () => {
-    let storageData = user?.access_token || localStorage.getItem('access_token')
-    let decoded = {}
+    let storageData =
+      user?.access_token || localStorage.getItem("access_token");
+    let decoded = {};
     if (storageData && isJsonString(storageData) && !user?.access_token) {
-      storageData = JSON.parse(storageData)
-      decoded = jwt_decode(storageData)
+      storageData = JSON.parse(storageData);
+      decoded = jwt_decode(storageData);
     }
-    return { decoded, storageData }
-  }
+    return { decoded, storageData };
+  };
 
-  UserService.axiosJWT.interceptors.request.use(async (config) => {
-    // Do something before request is sent
-    const currentTime = new Date()
-    const { decoded } = handleDecoded()
-    let storageRefreshToken = localStorage.getItem('refresh_token')
-    const refreshToken = JSON.parse(storageRefreshToken)
-    const decodedRefreshToken =  jwt_decode(refreshToken)
-    if (decoded?.exp < currentTime.getTime() / 1000) {
-      if(decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
-        const data = await UserService.refreshToken(refreshToken)
-        config.headers['token'] = `Bearer ${data?.access_token}`
-      }else {
-        dispatch(resetUser())
+  // Thiết lập interceptor cho các request gửi đi
+  UserService.axiosJWT.interceptors.request.use(
+    async (config) => {
+      // Thực hiện một số thao tác trước khi gửi request
+
+      const currentTime = new Date();
+      const { decoded } = handleDecoded();
+
+      let storageRefreshToken = localStorage.getItem("refresh_token");
+      const refreshToken = JSON.parse(storageRefreshToken);
+      const decodedRefreshToken = jwt_decode(refreshToken);
+
+      // Kiểm tra xem access token đã hết hạn chưa
+      if (decoded?.exp < currentTime.getTime() / 1000) {
+        // Nếu refresh token còn hạn sử dụng, thực hiện refresh token
+        if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+          const data = await UserService.refreshToken(refreshToken);
+          config.headers["token"] = `Bearer ${data?.access_token}`;
+        } else {
+          // Nếu refresh token đã hết hạn, đăng xuất người dùng
+          dispatch(resetUser());
+        }
       }
+      return config;
+    },
+    (err) => {
+      return Promise.reject(err);
     }
-    return config;
-  }, (err) => {
-    return Promise.reject(err)
-  })
+  );
 
+  // Hàm lấy chi tiết người dùng
   const handleGetDetailsUser = async (id, token) => {
-    let storageRefreshToken = localStorage.getItem('refresh_token')
-    const refreshToken = JSON.parse(storageRefreshToken)
-    const res = await UserService.getDetailsUser(id, token)
-    dispatch(updateUser({ ...res?.data, access_token: token, refreshToken: refreshToken}))
-  }
+    let storageRefreshToken = localStorage.getItem("refresh_token");
+    const refreshToken = JSON.parse(storageRefreshToken);
+    const res = await UserService.getDetailsUser(id, token);
+    dispatch(
+      updateUser({
+        ...res?.data,
+        access_token: token,
+        refreshToken: refreshToken,
+      })
+    );
+  };
 
   return (
-    <div style={{height: '100vh', width: '100%'}}>
+    <div style={{ height: "100vh", width: "100%" }}>
       <Loading isLoading={isLoading}>
         <Router>
           <Routes>
             {routes.map((route) => {
-              const Page = route.page
-              const Layout = route.isShowHeader ? DefaultComponent : Fragment
+              const Page = route.page;
+              const Layout = route.isShowHeader ? DefaultComponent : Fragment;
               return (
-                <Route key={route.path} path={route.path} element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                } />
-              )
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              );
             })}
           </Routes>
         </Router>
       </Loading>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

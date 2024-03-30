@@ -1,20 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
+// Trạng thái ban đầu của product
 const initialState = {
-  search: '',
-}
+  search: "",
+};
 
+// Tạo Slice cho product
 export const productSlide = createSlice({
-  name: 'product',
+  name: "product",
   initialState,
   reducers: {
+    // Reducer để thực hiện tìm kiếm sản phẩm
     searchProduct: (state, action) => {
-      state.search = action.payload
+      state.search = action.payload;
     },
   },
-})
+});
 
-// Action creators are generated for each case reducer function
-export const { searchProduct } = productSlide.actions
+// Các action creator được tạo ra cho mỗi reducer trong Slice
+export const { searchProduct } = productSlide.actions;
 
-export default productSlide.reducer
+export default productSlide.reducer;
