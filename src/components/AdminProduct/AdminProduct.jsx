@@ -24,8 +24,7 @@ const AdminProduct = () => {
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false)
   const user = useSelector((state) => state?.user)
   const searchInput = useRef(null);
-
-  const [stateProduct, setStateProduct] = useState({
+  const inittial = () => ({
     name: '',
     price: '',
     description: '',
@@ -33,17 +32,11 @@ const AdminProduct = () => {
     image: '',
     type: '',
     countInStock: '',
-    newType: ''
+    newType: '',
+    discount: '',
   })
-  const [stateProductDetails, setStateProductDetails] = useState({
-    name: '',
-    price: '',
-    description: '',
-    rating: '',
-    image: '',
-    type: '',
-    countInStock: ''
-  })
+  const [stateProduct, setStateProduct] = useState(inittial())
+  const [stateProductDetails, setStateProductDetails] = useState(inittial())
 
   const [form] = Form.useForm();
 
@@ -55,7 +48,7 @@ const AdminProduct = () => {
         rating,
         image,
         type,
-        countInStock } = data
+        countInStock,discount } = data
       const res = ProductService.createProduct({
         name,
         price,
@@ -63,7 +56,8 @@ const AdminProduct = () => {
         rating,
         image,
         type,
-        countInStock
+        countInStock,
+        discount
       })
       return res
     }
@@ -119,15 +113,20 @@ const AdminProduct = () => {
         rating: res?.data?.rating,
         image: res?.data?.image,
         type: res?.data?.type,
-        countInStock: res?.data?.countInStock
+        countInStock: res?.data?.countInStock,
+        discount: res?.data?.discount
       })
     }
     setIsLoadingUpdate(false)
   }
 
   useEffect(() => {
-    form.setFieldsValue(stateProductDetails)
-  }, [form, stateProductDetails])
+    if(!isModalOpen) {
+      form.setFieldsValue(stateProductDetails)
+    }else {
+      form.setFieldsValue(inittial())
+    }
+  }, [form, stateProductDetails, isModalOpen])
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
@@ -390,7 +389,8 @@ const AdminProduct = () => {
       rating: '',
       image: '',
       type: '',
-      countInStock: ''
+      countInStock: '',
+      discount: '',
     })
     form.resetFields()
   };
@@ -404,6 +404,7 @@ const AdminProduct = () => {
       image: stateProduct.image,
       type: stateProduct.type === 'add_type' ? stateProduct.newType : stateProduct.type,
       countInStock: stateProduct.countInStock,
+      discount: stateProduct.discount
     }
     mutation.mutate(params, {
       onSettled: () => {
@@ -548,6 +549,13 @@ const AdminProduct = () => {
               <InputComponent value={stateProduct.rating} onChange={handleOnchange} name="rating" />
             </Form.Item>
             <Form.Item
+              label="Discount"
+              name="discount"
+              rules={[{ required: true, message: 'Please input your discount of product!' }]}
+            >
+              <InputComponent value={stateProduct.discount} onChange={handleOnchange} name="discount" />
+            </Form.Item>
+            <Form.Item
               label="Image"
               name="image"
               rules={[{ required: true, message: 'Please input your count image!' }]}
@@ -626,6 +634,13 @@ const AdminProduct = () => {
               rules={[{ required: true, message: 'Please input your count rating!' }]}
             >
               <InputComponent value={stateProductDetails.rating} onChange={handleOnchangeDetails} name="rating" />
+            </Form.Item>
+            <Form.Item
+              label="Discount"
+              name="discount"
+              rules={[{ required: true, message: 'Please input your discount of product!' }]}
+            >
+              <InputComponent value={stateProductDetails.discount} onChange={handleOnchangeDetails} name="discount" />
             </Form.Item>
             <Form.Item
               label="Image"

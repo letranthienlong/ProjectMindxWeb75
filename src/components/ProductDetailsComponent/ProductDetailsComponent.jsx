@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { addOrderProduct } from '../../redux/slides/orderSlide'
+import { convertPrice } from '../../utils'
 
 const ProductDetailsComponent = ({idProduct}) => {
     const [numProduct, setNumProduct] = useState(1)
@@ -54,13 +55,16 @@ const ProductDetailsComponent = ({idProduct}) => {
             //         required: true,
             //     },
             // },
+            console.log('productDetails', productDetails)
             dispatch(addOrderProduct({
                 orderItem: {
                     name: productDetails?.name,
                     amount: numProduct,
                     image: productDetails?.image,
                     price: productDetails?.price,
-                    product: productDetails?._id
+                    product: productDetails?._id,
+                    discount: productDetails?.discount,
+                    countInstock: productDetails?.countInStock
                 }
             }))
         }
@@ -103,7 +107,7 @@ const ProductDetailsComponent = ({idProduct}) => {
                         <WrapperStyleTextSell> | Da ban 1000+</WrapperStyleTextSell>
                     </div>
                     <WrapperPriceProduct>
-                        <WrapperPriceTextProduct>{productDetails?.price}</WrapperPriceTextProduct>
+                        <WrapperPriceTextProduct>{convertPrice(productDetails?.price)}</WrapperPriceTextProduct>
                     </WrapperPriceProduct>
                     <WrapperAddressProduct>
                         <span>Giao đến </span>
@@ -151,6 +155,7 @@ const ProductDetailsComponent = ({idProduct}) => {
                     </div>
                 </Col>
             </Row >
+            
         </Loading>
     )
 }

@@ -80,8 +80,7 @@ const AdminUser = () => {
   )
 
   const getAllUsers = async () => {
-    const res = await UserService.getAllUser()
-    console.log('res', res)
+    const res = await UserService.getAllUser(user?.access_token)
     return res
   }
 
