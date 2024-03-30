@@ -18,6 +18,7 @@ const MyOrderPage = () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token)
     return res.data
   }
+  const user = useSelector((state) => state.user)
 
   const queryOrder = useQuery({ queryKey: ['orders'], queryFn: fetchMyOrder }, {
     enabled: state?.id && state?.token
@@ -34,17 +35,17 @@ const MyOrderPage = () => {
 
   const mutation = useMutationHooks(
     (data) => {
-      const { id, token , orderItems } = data
-      const res = OrderService.cancelOrder(id, token,orderItems)
+      const { id, token , orderItems, userId } = data
+      const res = OrderService.cancelOrder(id, token,orderItems, userId)
       return res
     }
   )
 
   const handleCanceOrder = (order) => {
-    mutation.mutate({id : order._id, token:state?.token, orderItems: order?.orderItems }, {
+    mutation.mutate({id : order._id, token:state?.token, orderItems: order?.orderItems, userId: user.id }, {
       onSuccess: () => {
         queryOrder.refetch()
-      }
+      },
     })
   }
   const { isLoading: isLoadingCancel, isSuccess: isSuccessCancel, isError: isErrorCancle, data: dataCancel } = mutation
@@ -52,14 +53,16 @@ const MyOrderPage = () => {
   useEffect(() => {
     if (isSuccessCancel && dataCancel?.status === 'OK') {
       message.success()
-    } else if (isErrorCancle) {
+    } else if(isSuccessCancel && dataCancel?.status === 'ERR') {
+      message.error(dataCancel?.message)
+    }else if (isErrorCancle) {
       message.error()
     }
   }, [isErrorCancle, isSuccessCancel])
 
   const renderProduct = (data) => {
     return data?.map((order) => {
-      return <WrapperHeaderItem> 
+      return <WrapperHeaderItem key={order?._id}> 
               <img src={order?.image} 
                 style={{
                   width: '70px', 
@@ -112,7 +115,7 @@ const MyOrderPage = () => {
                             border: '1px solid rgb(11, 116, 229)',
                             borderRadius: '4px'
                         }}
-                        textButton={'Hủy đơn hàng'}
+                        textbutton={'Hủy đơn hàng'}
                         styleTextButton={{ color: 'rgb(11, 116, 229)', fontSize: '14px' }}
                       >
                       </ButtonComponent>
@@ -124,7 +127,7 @@ const MyOrderPage = () => {
                             border: '1px solid rgb(11, 116, 229)',
                             borderRadius: '4px'
                         }}
-                        textButton={'Xem chi tiết'}
+                        textbutton={'Xem chi tiết'}
                         styleTextButton={{ color: 'rgb(11, 116, 229)', fontSize: '14px' }}
                       >
                       </ButtonComponent>

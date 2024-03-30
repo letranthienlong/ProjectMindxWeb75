@@ -36,7 +36,7 @@ const DetailsOrderPage = () => {
   return (
    <Loading isLoading={isLoading}>
      <div style={{width: '100%', height: '100vh', background: '#f5f5fa'}}>
-      <div style={{ width: '1270px', margin: '0 auto'}}>
+      <div style={{ width: '1270px', margin: '0 auto', height: '1270px'}}>
         <h4>Chi tiết đơn hàng</h4>
         <WrapperHeaderUser>
           <WrapperInfoUser>
@@ -57,7 +57,7 @@ const DetailsOrderPage = () => {
           <WrapperInfoUser>
             <WrapperLabel>Hình thức thanh toán</WrapperLabel>
             <WrapperContentInfo>
-              <div className='payment-info'>{orderContant[data?.paymentMethod]}</div>
+              <div className='payment-info'>{orderContant.payment[data?.paymentMethod]}</div>
               <div className='status-payment'>{data?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</div>
             </WrapperContentInfo>
           </WrapperInfoUser>
@@ -70,7 +70,6 @@ const DetailsOrderPage = () => {
             <WrapperItemLabel>Giảm giá</WrapperItemLabel>
           </div>
           {data?.orderItems?.map((order) => {
-            console.log('orrđer', order)
             return (
               <WrapperProduct>
                 <WrapperNameProduct>
